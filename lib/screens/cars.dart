@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import '../models/car.dart';
 
 class CarsScreen extends StatelessWidget {
-  const CarsScreen({super.key, required this.title, required this.cars});
+  const CarsScreen({super.key, this.title, required this.cars});
 
-  final String title;
+  final String? title;
   final List<Car> cars;
 
   void selectCar(BuildContext ctx, Car car) {
@@ -39,9 +39,13 @@ class CarsScreen extends StatelessWidget {
       ),);
     }
 
+    if (title == null) {
+      return content;
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(title!),
       ),
       body: content,
     );
