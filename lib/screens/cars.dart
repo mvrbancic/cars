@@ -5,13 +5,19 @@ import 'package:flutter/material.dart';
 import '../models/car.dart';
 
 class CarsScreen extends StatelessWidget {
-  const CarsScreen({super.key, this.title, required this.cars});
+  const CarsScreen({
+    super.key,
+    this.title,
+    required this.cars,
+    required this.onToggleFavorite
+  });
 
   final String? title;
   final List<Car> cars;
+  final void Function(Car car) onToggleFavorite;
 
   void selectCar(BuildContext ctx, Car car) {
-      Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) => CarDetailsScreen(car: car)));
+      Navigator.of(ctx).push(MaterialPageRoute(builder: (ctx) => CarDetailsScreen(car: car, onToggleFavorite: onToggleFavorite,)));
   }
 
   @override

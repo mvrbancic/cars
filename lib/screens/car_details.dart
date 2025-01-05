@@ -3,15 +3,25 @@ import 'package:flutter/material.dart';
 import '../models/car.dart';
 
 class CarDetailsScreen extends StatelessWidget {
-  const CarDetailsScreen({super.key, required this.car});
+  const CarDetailsScreen({
+    super.key,
+    required this.car,
+    required this.onToggleFavorite
+  });
 
   final Car car;
+  final void Function(Car car) onToggleFavorite;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(car.model),
+        actions: [
+          IconButton(onPressed: () {
+            onToggleFavorite(car);
+          }, icon: Icon(Icons.star))
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
