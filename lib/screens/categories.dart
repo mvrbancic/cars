@@ -8,12 +8,14 @@ import '../data/dummy_data.dart';
 import '../models/car.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key, required this.onToggleFavorite});
+  const CategoriesScreen({super.key, required this.onToggleFavorite, required this.availableCars});
 
   final void Function(Car car) onToggleFavorite;
+  final List<Car> availableCars;
+
   void _selectCategory(BuildContext context, Category category) {
 
-    List<Car> filteredCars = dummyCars.where((car) => car.make.toLowerCase() == category.title.toLowerCase()).toList();
+    List<Car> filteredCars = availableCars.where((car) => car.make.toLowerCase() == category.title.toLowerCase()).toList();
 
    Navigator.push(context, MaterialPageRoute(builder: (ctx) => CarsScreen(
      title: category.title,

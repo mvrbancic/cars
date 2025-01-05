@@ -1,8 +1,17 @@
+import 'package:cars/data/dummy_data.dart';
 import 'package:cars/models/car.dart';
 import 'package:cars/screens/cars.dart';
 import 'package:cars/screens/categories.dart';
+import 'package:cars/screens/filters.dart';
 import 'package:cars/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
+
+const kInitialFilters = {
+  Filter.sportMode: false,
+  Filter.rearWheelDrive: false,
+  Filter.ambientLighting: false,
+  Filter.luxuryInterior: false
+};
 
 class TabsScreen extends StatefulWidget {
   const TabsScreen({super.key});
@@ -15,6 +24,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
   int _selectedPageIndex = 0;
   final List<Car> _favoriteCars = [];
+  Map<Filter, bool> _selectedFilters = kInitialFilters;
 
   void _showInfoMessage(String message) {
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -45,18 +55,47 @@ class _TabsScreenState extends State<TabsScreen> {
     });
   }
 
-  void _setScreen(String identifier) {
+  void _setScreen(String identifier) async {
+    Navigator.of(context).pop();
     if (identifier == 'filters') {
+      final result = await Navigator.of(context).push<Map<Filter, bool>>(
+        MaterialPageRoute(builder: (ctx) => FiltersScreen(currentFilters: _selectedFilters,))
+      );
 
-    } else {
-      Navigator.of(context).pop();
+      setState(() {
+        _selectedFilters = result ?? kInitialFilters;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
 
-    Widget activePage = CategoriesScreen(onToggleFavorite: _toggleCarFavoriteStatus);
+    final availableCars = dummyCars.where((car) {
+      if (_selectedFilters[Filter.sportMode]!
+        && !car.features.contains(Filter.sportMode)) {
+        return false;
+      }
+
+      if (_selectedFilters[Filter.rearWheelDrive]!
+          && !car.features.contains(Filter.rearWheelDrive)) {
+        return false;
+      }
+
+      if (_selectedFilters[Filter.ambientLighting]!
+          && !car.features.contains(Filter.ambientLighting)) {
+        return false;
+      }
+
+      if (_selectedFilters[Filter.luxuryInterior]!
+          && !car.features.contains(Filter.luxuryInterior)) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+
+    Widget activePage = CategoriesScreen(onToggleFavorite: _toggleCarFavoriteStatus, availableCars: availableCars,);
     String activePageTitle = 'Categories';
 
     if (_selectedPageIndex == 1) {
