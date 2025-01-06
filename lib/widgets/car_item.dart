@@ -25,12 +25,15 @@ class CarItem extends StatelessWidget {
         },
         child: Stack(
           children: [
-            FadeInImage(
-                placeholder: MemoryImage(kTransparentImage),
-                image: NetworkImage(car.image),
-                fit: BoxFit.cover,
-                height: 200,
-                width: double.infinity,
+            Hero(
+              tag: car.id,
+              child: FadeInImage(
+                  placeholder: MemoryImage(kTransparentImage),
+                  image: NetworkImage(car.image),
+                  fit: BoxFit.cover,
+                  height: 200,
+                  width: double.infinity,
+              ),
             ),
             Positioned(
                 bottom: 0,

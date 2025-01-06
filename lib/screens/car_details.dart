@@ -31,17 +31,29 @@ class CarDetailsScreen extends ConsumerWidget {
             );
 
 
-          }, icon: Icon(isFavorite ? Icons.star : Icons.star_border))
+          }, icon: AnimatedSwitcher(
+                duration: Duration(milliseconds: 300),
+                transitionBuilder: (child, animation) {
+                  return RotationTransition(
+                    turns: Tween<double>(begin: 0.8, end: 1).animate(animation),
+                    child: child,
+                  );
+                },
+                child: Icon(isFavorite ? Icons.star : Icons.star_border, key: ValueKey(isFavorite),))
+            )
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-                car.image,
-                height: 300,
-                width: double.infinity,
-                fit: BoxFit.cover
+            Hero(
+              tag: car.id,
+              child: Image.network(
+                  car.image,
+                  height: 300,
+                  width: double.infinity,
+                  fit: BoxFit.cover
+              ),
             ),
             SizedBox(height: 14,),
             Text('Details',
