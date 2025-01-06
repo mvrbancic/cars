@@ -8,9 +8,8 @@ import '../data/dummy_data.dart';
 import '../models/car.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key, required this.onToggleFavorite, required this.availableCars});
+  const CategoriesScreen({super.key, required this.availableCars});
 
-  final void Function(Car car) onToggleFavorite;
   final List<Car> availableCars;
 
   void _selectCategory(BuildContext context, Category category) {
@@ -20,7 +19,6 @@ class CategoriesScreen extends StatelessWidget {
    Navigator.push(context, MaterialPageRoute(builder: (ctx) => CarsScreen(
      title: category.title,
      cars: filteredCars,
-     onToggleFavorite: onToggleFavorite,
    )));
   }
 

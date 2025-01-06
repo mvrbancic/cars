@@ -1,73 +1,26 @@
+import 'package:cars/providers/filters_provider.dart';
 import 'package:cars/screens/tabs.dart';
 import 'package:cars/widgets/main_drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum Filter {
-  sportMode,
-  rearWheelDrive,
-  ambientLighting,
-  luxuryInterior
-}
-
-class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({super.key, required this.currentFilters});
-
-  final Map<Filter, bool> currentFilters;
+class FiltersScreen extends ConsumerWidget {
+  const FiltersScreen({super.key});
 
   @override
-  State<FiltersScreen> createState() => _FiltersScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeFilters = ref.watch(filtersProvider);
 
-class _FiltersScreenState extends State<FiltersScreen> {
-
-  bool _sportModeFilterSet = false;
-  bool _rearWheelDriveFilterSet = false;
-  bool _ambientLightingFilterSet = false;
-  bool _luxuryInteriorFilterSet = false;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _sportModeFilterSet = widget.currentFilters[Filter.sportMode]!;
-    _rearWheelDriveFilterSet = widget.currentFilters[Filter.rearWheelDrive]!;
-    _ambientLightingFilterSet = widget.currentFilters[Filter.ambientLighting]!;
-    _luxuryInteriorFilterSet = widget.currentFilters[Filter.luxuryInterior]!;
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Filters'),
       ),
-      // drawer: MainDrawer(onSelectScreen: (identifier) {
-      //   Navigator.of(context).pop();
-      //   if (identifier == 'cars') {
-      //     Navigator.of(context).pushReplacement(
-      //         MaterialPageRoute(builder: (ctx) => TabsScreen())
-      //     );
-      //   }
-      // }),
-      body: PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (bool didPop, dynamic result) {
-          if(didPop) return;
-          Navigator.of(context).pop({
-            Filter.sportMode: _sportModeFilterSet,
-            Filter.rearWheelDrive: _rearWheelDriveFilterSet,
-            Filter.ambientLighting: _ambientLightingFilterSet,
-            Filter.luxuryInterior: _luxuryInteriorFilterSet,
-          });
-        },
-        child: Column(
+      body: Column(
           children: [
             SwitchListTile(
-                value: _sportModeFilterSet,
+                value: activeFilters[Filter.sportMode]!,
                 onChanged: (isChecked) {
-                  setState(() {
-                    _sportModeFilterSet = isChecked;
-                  });
+                  ref.read(filtersProvider.notifier).setFilter(Filter.sportMode, isChecked);
                 },
                 title: Text('Sport Mode',
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -83,11 +36,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
               contentPadding: EdgeInsets.only(left: 34, right: 22),
             ),
             SwitchListTile(
-              value: _rearWheelDriveFilterSet,
+              value: activeFilters[Filter.rearWheelDrive]!,
               onChanged: (isChecked) {
-                setState(() {
-                  _rearWheelDriveFilterSet = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(Filter.rearWheelDrive, isChecked);
               },
               title: Text('Rear-Wheel Drive',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -103,11 +54,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
               contentPadding: EdgeInsets.only(left: 34, right: 22),
             ),
             SwitchListTile(
-              value: _ambientLightingFilterSet,
+              value: activeFilters[Filter.ambientLighting]!,
               onChanged: (isChecked) {
-                setState(() {
-                  _ambientLightingFilterSet = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(Filter.ambientLighting, isChecked);
               },
               title: Text('Ambient Lighting',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -123,11 +72,9 @@ class _FiltersScreenState extends State<FiltersScreen> {
               contentPadding: EdgeInsets.only(left: 34, right: 22),
             ),
             SwitchListTile(
-              value: _luxuryInteriorFilterSet,
+              value: activeFilters[Filter.luxuryInterior]!,
               onChanged: (isChecked) {
-                setState(() {
-                  _luxuryInteriorFilterSet = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(Filter.luxuryInterior, isChecked);
               },
               title: Text('Luxury Interior',
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
@@ -144,7 +91,6 @@ class _FiltersScreenState extends State<FiltersScreen> {
             )
           ],
         ),
-      ),
     );
   }
 }

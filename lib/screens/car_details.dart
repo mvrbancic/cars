@@ -1,26 +1,37 @@
+import 'package:cars/providers/favorites_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/car.dart';
 
-class CarDetailsScreen extends StatelessWidget {
+class CarDetailsScreen extends ConsumerWidget {
   const CarDetailsScreen({
     super.key,
-    required this.car,
-    required this.onToggleFavorite
+    required this.car
   });
 
   final Car car;
-  final void Function(Car car) onToggleFavorite;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+
+    final favoriteCars = ref.watch(favoriteCarsProvider);
+    final isFavorite = favoriteCars.contains(car);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(car.model),
         actions: [
           IconButton(onPressed: () {
-            onToggleFavorite(car);
-          }, icon: Icon(Icons.star))
+            final wasAdded = ref.read(favoriteCarsProvider.notifier).toggleCarFavoriteStatus(car);
+
+            ScaffoldMessenger.of(context).clearSnackBars();
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(wasAdded ? 'Car added as a favorite' : 'Car removed.'))
+            );
+
+
+          }, icon: Icon(isFavorite ? Icons.star : Icons.star_border))
         ],
       ),
       body: SingleChildScrollView(

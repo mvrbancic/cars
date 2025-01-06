@@ -1,5 +1,6 @@
 import 'package:cars/screens/tabs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,7 +15,7 @@ final theme = ThemeData(
 );
 
 void main() {
-  runApp(const App());
+  runApp(ProviderScope(child: const App(),));
 }
 
 class App extends StatelessWidget {
